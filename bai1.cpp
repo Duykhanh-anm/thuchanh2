@@ -3,11 +3,11 @@
 #include <vector>
 #include <map>
 #include <stack>
-#include <stdexcept>  // For exception handling
-#include <sstream> //For stringstream
-#include <cctype> // For isalpha
+#include <stdexcept>  
+#include <sstream> 
+#include <cctype> 
 
-using namespace std; // Using the std namespace
+using namespace std;
 
 
 // Define the token types
@@ -23,21 +23,19 @@ enum class TokenType {
     INVALID
 };
 
-// Token structure
+
 struct Token {
     TokenType type;
     string value;
 };
 
 
-// Error handling class
 class ParseError : public runtime_error {
 public:
     ParseError(const string& msg) : runtime_error(msg) {}
 };
 
 
-// Lexer (Tokenizes input string)
 class Lexer {
 private:
     string input;
@@ -65,7 +63,6 @@ public:
         }
     }
 
-   // added a getPos function so Parser class can have access to pos safely
    int getPos(){
     return pos;
    }
@@ -89,16 +86,16 @@ public:
         } else if (c == ')') {
            advance();
             return {TokenType::RPAREN, ")"};
-        } else if (c == '^') { //Corrected to use single character
+        } else if (c == '^') { 
            advance();
             return {TokenType::AND, "^"};
-        } else if (c == 'v') { // Corrected to use single character
+        } else if (c == 'v') { 
             advance();
             return {TokenType::OR, "v"};
-        } else if (c == '>') { //Corrected to use single character
+        } else if (c == '>') { 
             advance();
             return {TokenType::IMPLIES, ">"};
-        } else if (c == '~') { //Corrected to use single character
+        } else if (c == '~') { r
             advance();
             return {TokenType::NOT, "~"};
         } else if (isalpha(c)) {
@@ -117,7 +114,6 @@ public:
 };
 
 
-// Abstract syntax tree Node
 struct Node {
     TokenType type;
     string value;
@@ -134,8 +130,6 @@ struct Node {
 };
 
 
-
-// Parser
 class Parser {
 private:
     Lexer lexer;
@@ -164,7 +158,7 @@ private:
         }
     }
 
-    Node* term() { // Handle variable or sub-expression
+    Node* term() { 
       Token token = currentToken;
        if(token.type == TokenType::VARIABLE) {
            consume(TokenType::VARIABLE);
@@ -224,7 +218,6 @@ public:
 };
 
 
-// Evaluator
 class Evaluator {
 private:
      map<string, bool> values;
@@ -234,7 +227,7 @@ public:
 
     bool evaluate(Node* node) {
         if (node == nullptr) {
-             return false; // Should never happen
+             return false; 
         }
         switch(node->type) {
             case TokenType::VARIABLE:
@@ -271,7 +264,7 @@ int main() {
     getline(cin, inputLine);
     string varName;
     bool value;
-    istringstream iss(inputLine); // Move this line before use.
+    istringstream iss(inputLine); 
       char colon;
       while(iss >> varName >> colon) {
          if(iss >> boolalpha >> value) {
@@ -293,7 +286,7 @@ int main() {
 
         cout << "Expression is valid" << endl;
         cout << "Result: " << boolalpha << result << endl;
-        delete ast; //Clean up the AST
+        delete ast; 
     } catch (const ParseError& e) {
         cout << "Expression is invalid: " << e.what() << endl;
     } catch (const runtime_error& e) {
